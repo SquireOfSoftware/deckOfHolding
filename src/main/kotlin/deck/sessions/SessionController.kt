@@ -51,4 +51,10 @@ class SessionController(val sessionService: SessionService,
                 )
             }
     }
+
+    @PutMapping("/{sessionId}/draw")
+    fun drawOneCard(@PathVariable sessionId: UUID): CardDto? {
+        return deckService.drawOneCard(sessionId)
+            ?.let { card -> CardDto(card.id, card.suit, card.type, card.type.value) }
+    }
 }

@@ -11,7 +11,7 @@ class DeckService (
 ) {
     private fun create52CardDeck(deckId: UUID): MutableList<Card> {
         val cardList = ArrayList<Card>()
-        for (suit in Suit.values()) {
+        for (suit in Suit.values().filter { suit -> suit != Suit.None }) {
             for (type in Type.values()) {
                 if (type == Type.Joker) {
                     continue
@@ -46,5 +46,14 @@ class DeckService (
         val deck = deckJpa.findBySessionId(sessionId)
         val cardList = cardJpa.findByDeckId(deck.id)
         return Pair(deck, cardList)
+    }
+
+    fun drawOneCard(sessionId: UUID): Card? {
+        // we want to grab the last card on the list (bottom of the list)
+        // and delete it from the db and return it
+        val deck = deckJpa.findBySessionId(sessionId)
+        val firstCard = cardJpa.findFirstByDeckId(deck.id)
+        if (firstCard != null) cardJpa.delete(firstCard)
+        return firstCard
     }
 }
