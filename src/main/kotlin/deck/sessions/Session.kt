@@ -1,5 +1,6 @@
 package deck.sessions
 
+import deck.deck.Deck
 import java.util.*
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue

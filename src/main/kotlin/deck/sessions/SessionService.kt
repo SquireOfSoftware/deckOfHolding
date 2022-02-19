@@ -1,14 +1,25 @@
 package deck.sessions
 
+import deck.deck.Card
+import deck.deck.Deck
+import deck.deck.DeckService
 import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
 import java.util.*
 
 @Service
-class SessionService(val sessionJpa: SessionJpa) {
-    fun createSession(sessionRequest: SessionRequest): Session {
-        val newSession = Session(UUID.randomUUID(), sessionRequest.jokers)
-        return sessionJpa.save(newSession)
+class SessionService(val sessionJpa: SessionJpa,
+                     val deckService: DeckService
+) {
+    fun createSession(sessionRequest: SessionRequest): Pair<Session, Pair<Deck, List<Card>>> {
+        val newSession = sessionJpa.save(Session(
+            UUID.randomUUID(),
+            sessionRequest.jokers
+        ))
+        return Pair(newSession,
+            if (sessionRequest.jokers) deckService.createStandardDeck(newSession.id)
+            else deckService.createStandardDeckWithoutJokers(newSession.id)
+        )
     }
 
     fun getSessions(page: Int?): List<Session> {
