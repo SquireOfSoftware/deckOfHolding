@@ -7,6 +7,7 @@ plugins {
     application
     id("org.springframework.boot") version "2.6.3"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
+    id("io.freefair.lombok") version "6.4.1"
 }
 
 group = "deck"
@@ -28,6 +29,7 @@ dependencies {
     runtimeOnly("com.h2database:h2")
     runtimeOnly("org.springframework.boot:spring-boot-devtools")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
+    implementation("io.github.microutils:kotlin-logging-jvm:2.0.11")
 }
 
 tasks.test {

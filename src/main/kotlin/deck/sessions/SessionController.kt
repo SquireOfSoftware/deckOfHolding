@@ -1,18 +1,27 @@
 package deck.sessions
 
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RestController
+import mu.KotlinLogging
+import org.springframework.web.bind.annotation.*
 import java.util.*
 
-@RestController("/session")
-class SessionController(val sessionJpa: SessionJpa) {
+@RestController
+@RequestMapping("/sessions")
+class SessionController(val sessionService: SessionService) {
+    private val logger = KotlinLogging.logger {}
 
-    @PostMapping("s")
-    fun createSession(session: Session): Session {
-        sessionJpa.()
+    @PostMapping("")
+    fun createSession(@RequestBody request: SessionRequest): Session {
+        logger.info("hello world")
+        return sessionService.createSession(request)
     }
 
-    @GetMapping("/session")
-    fun getSession(): Session = Session(UUID.randomUUID())
+    @GetMapping("")
+    fun getSessions(@RequestParam("page", required = false) page: Int?): List<Session> {
+        return sessionService.getSessions(page)
+    }
+
+    @GetMapping("/{sessionId}")
+    fun getSession(@PathVariable sessionId: UUID): Session{
+        return sessionService.getSpecificSession(sessionId)
+    }
 }

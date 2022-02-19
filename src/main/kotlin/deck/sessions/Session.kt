@@ -7,5 +7,6 @@ import javax.persistence.Id
 
 @Entity
 class Session (
-    @Id @GeneratedValue val id: UUID
+    @Id @GeneratedValue val id: UUID,
+    val jokers: Boolean = false
 )
