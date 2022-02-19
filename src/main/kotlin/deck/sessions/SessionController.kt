@@ -10,18 +10,18 @@ class SessionController(val sessionService: SessionService) {
     private val logger = KotlinLogging.logger {}
 
     @PostMapping("")
-    fun createSession(@RequestBody request: SessionRequest): Session {
+    fun createSession(@RequestBody request: SessionRequest): SessionDto {
         logger.info("hello world")
-        return sessionService.createSession(request)
+        return sessionService.createSession(request).let { session -> SessionDto(session.id, session.jokers) }
     }
 
     @GetMapping("")
-    fun getSessions(@RequestParam("page", required = false) page: Int?): List<Session> {
-        return sessionService.getSessions(page)
+    fun getSessions(@RequestParam("page", required = false) page: Int?): List<SessionDto> {
+        return sessionService.getSessions(page).map { session -> SessionDto(session.id, session.jokers) }
     }
 
     @GetMapping("/{sessionId}")
-    fun getSession(@PathVariable sessionId: UUID): Session{
-        return sessionService.getSpecificSession(sessionId)
+    fun getSession(@PathVariable sessionId: UUID): SessionDto {
+        return sessionService.getSpecificSession(sessionId).let { session -> SessionDto(session.id, session.jokers) }
     }
 }

@@ -16,6 +16,8 @@ class SessionService(val sessionJpa: SessionJpa) {
     }
 
     fun getSpecificSession(id: UUID): Session {
-        return sessionJpa.findById(id).orElseThrow { RuntimeException("hello") }
+        return sessionJpa.findById(id).orElseThrow {
+            RuntimeException(String.format("session of id: %s was not found", id.toString()) )
+        }
     }
 }
