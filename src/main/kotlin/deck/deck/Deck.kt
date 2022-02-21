@@ -2,10 +2,13 @@ package deck.deck
 
 import java.util.*
 import javax.persistence.Entity
-import javax.persistence.GeneratedValue
 import javax.persistence.Id
+import javax.persistence.Table
 
 @Entity
-class Deck(@Id @GeneratedValue val id: UUID,
-           val sessionId: UUID
+@Table(name = "decks")
+class Deck(
+    @Id
+    var id: UUID = UUID.randomUUID(),
+    var sessionId: UUID
 )

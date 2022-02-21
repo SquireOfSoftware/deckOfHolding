@@ -2,10 +2,9 @@ package deck.deck
 
 import org.springframework.stereotype.Service
 import java.util.*
-import kotlin.collections.ArrayList
 
 @Service
-class DeckService (
+class DeckService(
     private val deckJpa: DeckJpa,
     private val cardJpa: CardJpa
 ) {
@@ -16,30 +15,40 @@ class DeckService (
                 if (type == Type.Joker) {
                     continue
                 }
-                cardList.add(Card(UUID.randomUUID(), suit, type, deckId))
+                cardList.add(Card(suit = suit, type = type, deckId = deckId))
             }
         }
         return cardList
     }
 
+    private fun addCardOrder(cardList: MutableList<Card>) {
+        for ((counter, card) in cardList.withIndex()) {
+            card.setCardOrder(counter)
+        }
+    }
+
     fun createStandardDeckWithoutJokers(sessionId: UUID): Pair<Deck, List<Card>> {
-        val deck = deckJpa.save(Deck(UUID.randomUUID(), sessionId))
+        val deck = deckJpa.save(Deck(sessionId = sessionId))
         val cardList = create52CardDeck(deck.id)
         cardList.shuffle()
+        addCardOrder(cardList)
         return Pair(
             deck,
-            cardJpa.saveAll(cardList).toList())
+            cardJpa.saveAll(cardList).toList()
+        )
     }
 
     fun createStandardDeck(sessionId: UUID): Pair<Deck, List<Card>> {
-        val deck = deckJpa.save(Deck(UUID.randomUUID(), sessionId))
+        val deck = deckJpa.save(Deck(sessionId = sessionId))
         val cardList = create52CardDeck(deck.id)
-        cardList.add(Card(UUID.randomUUID(), Suit.None, Type.Joker, deck.id))
-        cardList.add(Card(UUID.randomUUID(), Suit.None, Type.Joker, deck.id))
+        cardList.add(Card(suit = Suit.None, type = Type.Joker, deckId = deck.id))
+        cardList.add(Card(suit = Suit.None, type = Type.Joker, deckId = deck.id))
         cardList.shuffle()
+        addCardOrder(cardList)
         return Pair(
             deck,
-            cardJpa.saveAll(cardList).toList())
+            cardJpa.saveAll(cardList).toList()
+        )
     }
 
     fun getDeck(sessionId: UUID): Pair<Deck, List<Card>>? {
@@ -55,5 +64,16 @@ class DeckService (
         val firstCard = cardJpa.findFirstByDeckId(deck.id)
         if (firstCard != null) cardJpa.delete(firstCard)
         return firstCard
+    }
+
+    fun shuffle(sessionId: UUID): Pair<Deck, List<Card>> {
+        val deck = deckJpa.findBySessionId(sessionId)
+        val cardList = cardJpa.findByDeckId(deck.id).toMutableList()
+        cardList.shuffle()
+        addCardOrder(cardList)
+        return Pair(
+            deck,
+            cardJpa.saveAll(cardList).toList()
+        )
     }
 }

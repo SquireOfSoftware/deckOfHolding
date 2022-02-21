@@ -8,15 +8,18 @@ import org.springframework.stereotype.Service
 import java.util.*
 
 @Service
-class SessionService(val sessionJpa: SessionJpa,
-                     val deckService: DeckService
+class SessionService(
+    val sessionJpa: SessionJpa,
+    val deckService: DeckService
 ) {
     fun createSession(sessionRequest: SessionRequest): Pair<Session, Pair<Deck, List<Card>>> {
-        val newSession = sessionJpa.save(Session(
-            UUID.randomUUID(),
-            sessionRequest.jokers
-        ))
-        return Pair(newSession,
+        val newSession = sessionJpa.save(
+            Session(
+                jokers = sessionRequest.jokers
+            )
+        )
+        return Pair(
+            newSession,
             if (sessionRequest.jokers) deckService.createStandardDeck(newSession.id)
             else deckService.createStandardDeckWithoutJokers(newSession.id)
         )
@@ -27,8 +30,8 @@ class SessionService(val sessionJpa: SessionJpa,
     }
 
     fun getSpecificSession(id: UUID): Session {
-        return sessionJpa.findById(id).orElseThrow {
-            RuntimeException(String.format("session of id: %s was not found", id.toString()) )
+        return sessionJpa.findById(id.toString()).orElseThrow {
+            RuntimeException(String.format("session of id: %s was not found", id.toString()))
         }
     }
 }

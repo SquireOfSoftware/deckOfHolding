@@ -1,7 +1,8 @@
 package deck.deck
 
-enum class Suit(val icon: Char,
-                val id: String
+enum class Suit(
+    val icon: Char,
+    val id: String
 ) {
     Clubs('♣', "clubs"),
     Diamonds('♦', "diamonds"),
