@@ -1,0 +1,37 @@
+type Query {
+    createSession(jokers: Boolean): Session
+    session(id: ID!): Session
+}
+
+type Session {
+    id: String!
+    deck: Deck
+}
+
+type Deck {
+    id: String!
+    cards: [Card]
+}
+
+type Card {
+    id: String!
+    type: CardType!
+    value: Int!
+}
+
+enum CardType {
+    Ace,
+    Two,
+    Three,
+    Four,
+    Five,
+    Six,
+    Seven,
+    Eight,
+    Nine,
+    Ten,
+    Jack,
+    Queen,
+    King,
+    Joker,
+}
