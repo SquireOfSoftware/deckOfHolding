@@ -23,7 +23,7 @@ class DeckService(
 
     private fun addCardOrder(cardList: MutableList<Card>) {
         for ((counter, card) in cardList.withIndex()) {
-            card.setCardOrder(counter)
+            card.cardOrder = counter
         }
     }
 
@@ -75,5 +75,27 @@ class DeckService(
             deck,
             cardJpa.saveAll(cardList).toList()
         )
+    }
+
+    fun addCards(sessionId: UUID, cardsToAdd: List<NewCard>): List<Card> {
+        val deck = deckJpa.findBySessionId(sessionId)
+        val cardList = cardsToAdd.map { newCard ->
+            Card(
+                suit = newCard.suit,
+                type = newCard.type,
+                deckId = deck.id
+            )
+        }.toMutableList()
+        val lastCard = cardJpa.findTopByDeckIdOrderByCardOrderDesc(deck.id)
+        val lastCardCount = lastCard?.cardOrder ?: 0
+        if (lastCardCount == 0) {
+            addCardOrder(cardList)
+        } else {
+            var counter = lastCardCount + 1
+            for (card in cardList) {
+                card.cardOrder = counter++
+            }
+        }
+        return cardJpa.saveAll(cardList).toList()
     }
 }

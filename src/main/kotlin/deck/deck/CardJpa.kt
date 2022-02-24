@@ -6,4 +6,5 @@ import java.util.*
 interface CardJpa : CrudRepository<Card, UUID> {
     fun findByDeckId(deckId: UUID): List<Card>
     fun findFirstByDeckId(deckId: UUID): Card?
+    fun findTopByDeckIdOrderByCardOrderDesc(deckId: UUID): Card?
 }

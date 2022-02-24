@@ -11,9 +11,5 @@ class Card(
     val type: Type,
     val deckId: UUID
 ) {
-    private var cardOrder: Int = 0
-
-    fun setCardOrder(cardOrder: Int) {
-        this.cardOrder = cardOrder
-    }
+    var cardOrder: Int = 0
 }

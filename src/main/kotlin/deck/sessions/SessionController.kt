@@ -3,6 +3,7 @@ package deck.sessions
 import deck.deck.CardDto
 import deck.deck.DeckDto
 import deck.deck.DeckService
+import deck.deck.NewCard
 import mu.KotlinLogging
 import org.springframework.web.bind.annotation.*
 import java.util.*
@@ -67,13 +68,19 @@ class SessionController(
             }
     }
 
-    @PutMapping("/{sessionId}/draw")
+    @PostMapping("/{sessionId}:add")
+    fun addCards(@PathVariable sessionId: UUID, @RequestBody cardsToAdd: List<NewCard>): List<CardDto> {
+        return deckService.addCards(sessionId, cardsToAdd)
+            .map {card -> CardDto(card.id, card.suit, card.type, card.type.value)}
+    }
+
+    @PutMapping("/{sessionId}:draw")
     fun drawOneCard(@PathVariable sessionId: UUID): CardDto? {
         return deckService.drawOneCard(sessionId)
             ?.let { card -> CardDto(card.id, card.suit, card.type, card.type.value) }
     }
 
-    @PutMapping("/{sessionId}/shuffle")
+    @PutMapping("/{sessionId}:shuffle")
     fun shuffleSession(@PathVariable sessionId: UUID): DeckDto? {
         return deckService.shuffle(sessionId).let { (deck, cardList) ->
             DeckDto(
