@@ -5,7 +5,7 @@ plugins {
     kotlin("plugin.spring") version "1.5.31"
     kotlin("plugin.jpa") version "1.5.31"
     application
-    id("org.springframework.boot") version "2.6.3"
+    id("org.springframework.boot") version "2.6.7"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
     id("io.freefair.lombok") version "6.4.1"
 }
@@ -31,7 +31,13 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     implementation("io.github.microutils:kotlin-logging-jvm:2.0.11")
     implementation(platform("com.netflix.graphql.dgs:graphql-dgs-platform-dependencies:latest.release"))
-    implementation("com.netflix.graphql.dgs:graphql-dgs-spring-boot-starter")
+    implementation("com.netflix.graphql.dgs:graphql-dgs-spring-boot-starter:4.10.2")
+//    testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
+    testImplementation("org.testcontainers:testcontainers:1.17.1")
+    testImplementation("org.testcontainers:junit-jupiter:1.17.1")
+    testImplementation("org.testcontainers:postgresql:1.17.1")
+    implementation("org.postgresql:postgresql:42.3.4")
+    testImplementation("org.springframework.boot:spring-boot-starter-webflux")
 }
 
 tasks.test {

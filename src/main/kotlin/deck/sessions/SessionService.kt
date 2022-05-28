@@ -30,7 +30,7 @@ class SessionService(
     }
 
     fun getSpecificSession(id: UUID): Session {
-        return sessionJpa.findById(id.toString()).orElseThrow {
+        return sessionJpa.findById(id).orElseThrow {
             RuntimeException(String.format("session of id: %s was not found", id.toString()))
         }
     }
